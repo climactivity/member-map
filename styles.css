@@ -37,10 +37,14 @@ body {
     color: var(--text-primary)
 }
 
+main {
+    padding-top: 2rem;
+}
+
 
 main #leaflet-map {
     width: 100vw;
-    height: 100vh;
+    height: 98vh;
     padding-top: 2rem;
 }
 div#spinner {
