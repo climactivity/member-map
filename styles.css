@@ -1,0 +1,50 @@
+:root {
+    font-size: 16pt;
+    font-family: 'Open Sans';
+    box-sizing: border-box;
+    --text-primary: #b6b6b6;
+    --text-secondary: #ececec;
+    --bg-primary: #23232e;
+    --bg-secondary: #141418;
+
+}
+
+body {
+    color: black;
+    background-color: lightgray;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    height: 2rem;
+    width: 100vw;
+    background-color: var(--bg-primary);
+    position: absolute;
+}
+
+.navbar-nav {
+    height: 2rem;
+    display: flex;
+    flex: row;
+    list-style: none;
+    padding-top: 0;
+    margin: 0;
+    align-items: center;
+}
+
+.navbar-item {
+    color: var(--text-primary)
+}
+
+
+main #leaflet-map {
+    width: 100vw;
+    height: 100vh;
+    padding-top: 2rem;
+}
+div#spinner {
+    display: flex;
+    justify-content: center;
+    align-items:center; 
+}
