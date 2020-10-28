@@ -5,6 +5,8 @@ const OPEN_STREETMAP_API = 'https://nominatim.openstreetmap.org/search?format=js
 
 async function getMemberList() {
 
+    // nur die Daten, die wir auch brauchen erfassen mit xprofile string 
+
     return await fetch(`${BB_API_BASE_URL}/buddyboss/v1/members`, {
         credentials: 'include'
     })
@@ -13,6 +15,8 @@ async function getMemberList() {
 }
 
 async function getLocationForPlz(plz) {
+
+    // batch calls
     return await fetch(`${OPEN_STREETMAP_API}${plz}`, {
     })
     .then(response => response.json())
