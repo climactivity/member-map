@@ -45,10 +45,5 @@ main {
 main #leaflet-map {
     width: 100vw;
     height: 98vh;
-    padding-top: 2rem;
-}
-div#spinner {
-    display: flex;
-    justify-content: center;
-    align-items:center; 
+    
 }

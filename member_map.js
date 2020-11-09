@@ -25,7 +25,7 @@ async function getMemberList() {
 
 async function getLocationForPlz(plz) {
 
-    console.log(plz)
+    //console.log(plz)
     if (plzs.plzs.hasOwnProperty(plz)) {
         let data = plzs.plzs[plz];
         return {
@@ -50,7 +50,6 @@ function markerClicked(e) {
 }
 
 function initMap() {
-    document.querySelector('.spinner').innerHTML = ""
     var mymap = L.map('leaflet-map').setView([51.94, 10.26], 7);
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -64,6 +63,7 @@ function initMap() {
 }
 
 function initMarkers(markers, map) {
+
     markers.map(marker => {
         L.marker(marker.latlong, marker.options).addTo(map);
     })
@@ -86,11 +86,14 @@ function initMarkerClusters(markers, map) {
         markerCluster.addLayer( L.marker(marker.latlong, marker.options).on('click', markerClicked) );
     })
     map.addLayer(markerCluster);
+    document.querySelector('#spinner').remove()
 
 
 }
 
 async function initMemberMap() {
+    var mymap = initMap();
+
     let members = await getMemberList();
     let markers = await Promise.all(members.map(async m => {
         let plz = m.xprofile.groups["1"].fields["22"] ? m.xprofile.groups["1"].fields["22"].value.raw : "";
@@ -126,10 +129,9 @@ async function initMemberMap() {
 
 
     //console.log("location", await getLocationForPlz("45481")); 
-    console.log("members", members);
+    //console.log("members", members);
     //console.log(markers)
     
-    var mymap = initMap();
     //initMarkers(markers, mymap)
     initMarkerClusters( markers, mymap)
 
