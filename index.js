@@ -1,4 +1,3 @@
-//const { plzs } = require("./plz");
 
 const ACCESS_TOKEN = "pk.eyJ1IjoidGltb3ZvbGsiLCJhIjoiY2tmbWt1bGZwMDZndDJzcGwybng1d3I1ciJ9.PYYJgE9ZANvQB9QuHOfFCQ";
 const BB_API_BASE_URL = "https://climactivity.de/wp-json";
@@ -8,7 +7,12 @@ async function getMemberList() {
 
     // nur die Daten, die wir auch brauchen erfassen mit xprofile string 
 
-    return await fetch(`${BB_API_BASE_URL}/buddyboss/v1/members?` + new URLSearchParams({ xprofile: "Ort" }), {
+    var params = {
+        xprofile: "Über mich",
+        per_page: 100
+    }
+
+    return await fetch(`${BB_API_BASE_URL}/buddyboss/v1/members${params ? `?${new URLSearchParams(params)}`:""}`, {
         credentials: 'include',
         headers: {
             'Content-Type': 'application/json'
@@ -21,6 +25,7 @@ async function getMemberList() {
 
 async function getLocationForPlz(plz) {
 
+    console.log(plz)
     if (plzs.plzs.hasOwnProperty(plz)) {
         let data = plzs.plzs[plz];
         return {
@@ -38,7 +43,13 @@ async function getLocationForPlz(plz) {
 
 }
 
-function initMap(markers) {
+function markerClicked(e) {
+    console.log(e)
+    var win = window.open(e.target.options.ref, '_blank');
+    win.focus();
+}
+
+function initMap() {
     document.querySelector('.spinner').innerHTML = ""
     var mymap = L.map('leaflet-map').setView([51.94, 10.26], 7);
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -49,9 +60,34 @@ function initMap(markers) {
         zoomOffset: -1,
         accessToken: ACCESS_TOKEN
     }).addTo(mymap);
+    return mymap;
+}
+
+function initMarkers(markers, map) {
     markers.map(marker => {
-        L.marker(marker.latlong, marker.options).addTo(mymap);
+        L.marker(marker.latlong, marker.options).addTo(map);
     })
+}
+
+function initMarkerClusters(markers, map) {
+
+    /*
+    let markerClusters = {}
+    markers.map(marker => {
+        if(!markerClusters.hasOwnProperty(marker.plz)) {
+            markerClusters[marker.plz] = [];
+        } 
+        markerClusters[marker.plz].push(marker);
+    }); 
+    */
+
+    var markerCluster = L.markerClusterGroup(); 
+    markers.map(marker => {
+        markerCluster.addLayer( L.marker(marker.latlong, marker.options).on('click', markerClicked) );
+    })
+    map.addLayer(markerCluster);
+
+
 }
 
 async function initMemberMap() {
@@ -61,24 +97,42 @@ async function initMemberMap() {
         let name = m.xprofile.groups["1"].fields["1"].value.raw;
         if (plz != "") {
             let location = (await getLocationForPlz(plz));
-            console.log("plz", plz, location.name);
+            //console.log("plz", plz, location.name);
             if (location) {
+
+                var icon = L.icon({
+                    iconUrl: m.avatar_urls.thumb,
+                    iconSize: [38, 38],
+                    //iconAnchor: [22, 94],
+                    //popupAnchor: [-3, -76],
+                })
+
+                var options = {title: name, ref: m.link}; 
+                if (m.member_types.hasOwnProperty("mitglied")) options = {...options, icon}
                 return {
+                    plz,
                     latlong: [location.lat, location.lon],
-                    options: {
-                        title: name
-                    }
+                    options,
+                    
                 }
             }
         } else {
             //console.warn(`${name} has emtpy plz, dont fetch`);
         }
     }))
+
     markers = markers.filter(m => m != undefined);
+
+
+
     //console.log("location", await getLocationForPlz("45481")); 
     console.log("members", members);
-    console.log(markers)
-    initMap(markers);
+    //console.log(markers)
+    
+    var mymap = initMap();
+    //initMarkers(markers, mymap)
+    initMarkerClusters( markers, mymap)
+
 }
 
 initMemberMap();
