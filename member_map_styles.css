@@ -61,6 +61,26 @@ div #message_box {
 
 }
 
+.map-marker-plus {
+    width: 38px;
+    height: 38px;
+    object-fit: scale-down;
+    border: 4pt;
+    border-radius: 4pt;
+    border-style: solid;
+    border-color: #95c11e;
+}
+
+.map-marker {
+    width: 38px;
+    height: 38px;
+    object-fit: scale-down;
+    border: 4pt;
+    border-radius: 4pt;
+    border-style: solid;
+    border-color: #5689a0;
+}
+
 @keyframes bounce {
     to {
         transform: translateY(-15px);

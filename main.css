@@ -6,7 +6,6 @@
     --text-secondary: #ececec;
     --bg-primary: #23232e;
     --bg-secondary: #141418;
-
 }
 
 body {
@@ -41,9 +40,8 @@ main {
     padding-top: 2rem;
 }
 
-
 main #leaflet-map {
     width: 100vw;
     height: 98vh;
-    
 }
+

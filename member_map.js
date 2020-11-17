@@ -12,7 +12,22 @@ async function getMemberList() {
         per_page: 100
     }
 
-    return await fetch(`${BB_API_BASE_URL}/buddyboss/v1/members${params ? `?${new URLSearchParams(params)}`:""}`, {
+    return await fetch(`${BB_API_BASE_URL}/buddyboss/v1/members${params ? `?${new URLSearchParams(params)}` : ""}`, {
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json'
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+        }
+    })
+        .then(response => response.json())
+
+}
+
+async function getOwnLoaction() {
+
+    // nur die Daten, die wir auch brauchen erfassen mit xprofile string 
+
+    return await fetch(`${BB_API_BASE_URL}/buddyboss/v1/account-settings`, {
         credentials: 'include',
         headers: {
             'Content-Type': 'application/json'
@@ -81,9 +96,9 @@ function initMarkerClusters(markers, map) {
     }); 
     */
 
-    var markerCluster = L.markerClusterGroup(); 
+    var markerCluster = L.markerClusterGroup();
     markers.map(marker => {
-        markerCluster.addLayer( L.marker(marker.latlong, marker.options).on('click', markerClicked) );
+        markerCluster.addLayer(L.marker(marker.latlong, marker.options).on('click', markerClicked));
     })
     map.addLayer(markerCluster);
     document.querySelector('#spinner').remove()
@@ -102,7 +117,8 @@ async function initMemberMap() {
             let location = (await getLocationForPlz(plz));
             //console.log("plz", plz, location.name);
             if (location) {
-
+                var options = { title: name, ref: m.link };
+                /*
                 var icon = L.icon({
                     iconUrl: m.avatar_urls.thumb,
                     iconSize: [38, 38],
@@ -110,13 +126,26 @@ async function initMemberMap() {
                     //popupAnchor: [-3, -76],
                 })
 
-                var options = {title: name, ref: m.link}; 
                 if (m.member_types.hasOwnProperty("mitglied")) options = {...options, icon}
+                */
+
+                var icon = L.divIcon( {
+                     className: m.member_types.hasOwnProperty("mitglied") ? 'map-marker-plus' : 'map-marker',
+                     iconUrl: m.avatar_urls.thumb,
+                     iconSize: [38, 38],  
+                     html: `<img style="width: 100%; height: 100%;"
+                     src="${m.avatar_urls.thumb}"
+                     alt="${name}"/>`
+                })
+
+                options = {...options, icon}
+
+
                 return {
                     plz,
                     latlong: [location.lat, location.lon],
                     options,
-                    
+
                 }
             }
         } else {
@@ -131,9 +160,10 @@ async function initMemberMap() {
     //console.log("location", await getLocationForPlz("45481")); 
     //console.log("members", members);
     //console.log(markers)
-    
+
+    console.log(await getOwnLoaction());
     //initMarkers(markers, mymap)
-    initMarkerClusters( markers, mymap)
+    initMarkerClusters(markers, mymap)
 
 }
 
