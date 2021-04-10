@@ -1,6 +1,6 @@
 
 const ACCESS_TOKEN = "pk.eyJ1IjoidGltb3ZvbGsiLCJhIjoiY2tmbWt1bGZwMDZndDJzcGwybng1d3I1ciJ9.PYYJgE9ZANvQB9QuHOfFCQ";
-const BB_API_BASE_URL = "https://climactivity.de/wp-json";
+const BB_API_BASE_URL = "https://climactivity-netzwerk.de/wp-json"; // danke Melanie
 const OPEN_STREETMAP_API = 'https://nominatim.openstreetmap.org/search?format=json&q=';
 
 async function getMemberList() {
@@ -15,8 +15,9 @@ async function getMemberList() {
     return await fetch(`${BB_API_BASE_URL}/buddyboss/v1/members${params ? `?${new URLSearchParams(params)}` : ""}`, {
         credentials: 'include',
         headers: {
-            'Content-Type': 'application/json'
-            // 'Content-Type': 'application/x-www-form-urlencoded',
+            'Access-Control-Allow-Origin' : '*',
+            'Content-Type': 'application/json',
+            'X-WP-Nonce' : wpApiSettings.nonce
         }
     })
         .then(response => response.json())
@@ -26,11 +27,13 @@ async function getMemberList() {
 async function getOwnLoaction() {
 
     // nur die Daten, die wir auch brauchen erfassen mit xprofile string 
-
+    const {nonce} = wpApiSettings
     return await fetch(`${BB_API_BASE_URL}/buddyboss/v1/account-settings`, {
         credentials: 'include',
         headers: {
-            'Content-Type': 'application/json'
+            'Access-Control-Allow-Origin' : '*',
+            'Content-Type': 'application/json',
+            'X-WP-Nonce' : nonce
             // 'Content-Type': 'application/x-www-form-urlencoded',
         }
     })
@@ -65,6 +68,9 @@ function markerClicked(e) {
 }
 
 function initMap() {
+    const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+    const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
+    let zoomLevel = (vh > 1000) ? 7 : 8;
     var mymap = L.map('leaflet-map').setView([51.94, 10.26], 7);
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -167,4 +173,20 @@ async function initMemberMap() {
 
 }
 
-initMemberMap();
+function wpApiHasLoaded(callback, attempts, timeout) {
+    if (attempts < 0) {
+        console.log("Failed to load wpApiSettings");
+        return
+    }
+    if (typeof wpApiSettings === 'undefined') {
+        setTimeout(() => {
+            wpApiHasLoaded(callback, attempts - 1, timeout)
+        }, timeout);
+    } else {
+        callback();
+    }
+}
+
+wpApiHasLoaded( initMemberMap, 10, 100 );
+
+//initMemberMap();
