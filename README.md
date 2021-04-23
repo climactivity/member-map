@@ -9,7 +9,7 @@ Die Leaflet Abhängigkeit wird direkt included, man braucht also kein NPM dafür
     
     `update.sh` automatisiert dies einigermaßen. Setz einen Eintrag in `.ssh/config` der auf den WP-Server zeigt und hinterleg das in .env     
 
-2. Copy-Paste wp-shell.html in den member-map Artikel in Wordpress (ja, wirklich, help)
+2. Copy-Paste wp-shell.html in den member-map Artikel in Wordpress (ja, wirklich, help; ich hoffe das braucht man nicht so oft)
     * `index.html` war für lokales Testen und erfordert eine eigene installation von WP/Buddy-Boss, ich weiß auch nur noch so halb wie das ging 
 
 # Bekannte Probleme 
