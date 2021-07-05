@@ -96,7 +96,7 @@ function initMap() {
     const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
     const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
     let zoomLevel = (vh > 1000) ? 7 : 8;
-    var mymap = L.map('leaflet-map').setView([51.94, 10.26], 7);
+    var mymap = L.map('leaflet-map').fitBounds([[54.9, 5.7],[47.1, 15.0]]);
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         maxZoom: 18,
