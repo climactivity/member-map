@@ -20,3 +20,8 @@ Die Leaflet Abhängigkeit wird direkt included, man braucht also kein NPM dafür
 - irgendwas mit `get_headers()` wenn man auf ein Profil klickt. Scheint keine Funktionalität zu beeinflussen, sieht aber nicht gut aus. (Anm. Timo: Ich kriege den Fehler nicht wiederholbar reproduziert) 
 - die Postleitzahlen-Koordinaten-Generierung ist ein Haufen Spaghetti ohne offensichtliche Methodik um an neue Geodaten zu kommen. Aus _convenience_-Gründen liegt die `.geojson`-Datei mit allen Postleitzhalen-Polygonen in geo-data, zusammen mit dem Skript um daraus `plz.js` zu machen
 - Die wpApiSetting werden nur geladen wenn man als Admin eingeloggt ist. Wir müssen entweder die nonce anders bekommen oder die Security von dem API-Endpunkt für Member abändern.
+
+
+# Work Arounds
+
+Die X-WP-Nonce ist zur Zeit testweise auskommentiert, das lößt das Problem auch nicht.
